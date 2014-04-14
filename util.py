@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import itertools
+
 class Factorizer(object):
   """factor numbers with a cache."""
 
@@ -7,6 +9,33 @@ class Factorizer(object):
     # caches
     self.n2factors = {}
     self.n2isprime = {}
+
+  def is_prime(self, n):
+    if n in self.n2isprime:
+      return self.n2isprime[n]
+
+    if n in self.n2factors:
+      return len(self.n2factors) == 1
+
+    if n < 2:
+      assert False
+
+    if n == 2:
+      self.n2isprime[n] = True
+      return True
+
+    if n % 2 == 0:
+      self.n2isprime[n] = False
+      return False
+
+    stop = int(n ** 0.5 + 1)
+    for i in range(3, stop, 2):
+      if n % i == 0:
+        self.n2isprime[n] = False
+        return False
+
+    self.n2isprime[n] = True
+    return True
 
   def factorize(self, n):
     if n < 2:
@@ -28,37 +57,14 @@ class Factorizer(object):
     else:
       return []
 
-  def is_prime(self, n):
-    if n in self.n2isprime:
-      return self.n2isprime[n]
-
-    if n in self.n2factors:
-      return len(self.n2factors) == 1
-
-    if n < 2:
-      assert False
-
-    if n % 2 == 0:
-      self.n2isprime[n] = False
-      return False
-
-    stop = int(n ** 0.5 + 1)
-    for i in range(3, stop, 2):
-      if n % i == 0:
-        self.n2isprime[n] = False
-        return False
-
-    self.n2isprime[n] = True
-    return True
-
 
 _f = Factorizer()
 
-def factorize(n):
-  return _f.factorize(n)
-
 def is_prime(n):
   return _f.is_prime(n)
+
+def factorize(n):
+  return _f.factorize(n)
 
 def gcd(a, b):
   while b:
@@ -67,3 +73,13 @@ def gcd(a, b):
 
 def lcm(a, b):
   return a * b / gcd(a, b)
+
+def combinations_all_lengths(cc):
+  for i in range(len(cc) + 1):
+    for combo in itertools.combinations(cc, i):
+      yield combo
+
+def nonempty_combinations_all_lengths(cc):
+  for i in range(1, len(cc) + 1):
+    for combo in itertools.combinations(cc, i):
+      yield combo
