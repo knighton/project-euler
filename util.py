@@ -37,6 +37,14 @@ class Factorizer(object):
     self.n2isprime[n] = True
     return True
 
+  def primes_in_range(self, a, z_excl):
+    assert 2 <= a <= z_excl
+    rr = []
+    for i in range(a, z_excl):
+      if self.is_prime(i):
+        rr.append(i)
+    return rr
+
   def factorize(self, n):
     if n < 2:
       return []
@@ -62,6 +70,9 @@ _f = Factorizer()
 
 def is_prime(n):
   return _f.is_prime(n)
+
+def primes_in_range(a, z_excl):
+  return _f.primes_in_range(a, z_excl)
 
 def factorize(n):
   return _f.factorize(n)
